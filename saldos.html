@@ -118,7 +118,7 @@
                         var salLo = data[i].Saldo;
                         var idLo  = data[i].Valor;
                         var bob   = '<div class="col-sm-6 col-md-3"><div class="panel income db mbm"><div class="panel-body"><p class="icon"><i class="icon fa fa-money" style="color:#5cb85c;"></i></p><h4 class="value"><span>$</span><span>' + salLo + '</span></h4><p class="description"><b>' + nomLo + '</b></p></div></div></div>';
-                        $( "#sum_box" ).html(bob);
+                       document.getElementById("sum_box").innerHTML += bob;
                     }
                 }else{
                     found = false;
