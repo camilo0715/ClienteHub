@@ -47,35 +47,16 @@
                 <div id="title-breadcrumb-option-demo" class="page-title-breadcrumb">
                     <div class="page-header pull-left">
                         <div class="page-title" >
-                            Procesando Pago...</div>
+                            Historial de transacciones</div>
                     </div>
                     <div class="clearfix">
                     </div>
                 </div>
                 <!--END TITLE & BREADCRUMB PAGE-->
                 <!--BEGIN CONTENT-->
-                <div class="page-content" style="max-height: 0px;">
+                <div class="page-content" style="max-height: 300px; overflow-y: scroll;">
                     <div id="tab-general">
                         <div id="sum_box" class="row mbl">
-                            <div class="col-sm-6 col-md-3">
-                                <div class="panel profit db mbm">
-                                    <div class="panel-body">
-                                        <br>
-                                        <img src="images/nfc.png" class="img-responsive"/>
-                                        <p class="description">
-                                            Porfavor acerquen sus smarthphones para completar la operación.</p>
-                                            
-                                        <div class="progress progress-sm mbn">
-                                            <div role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-                                                style="width: 100%;" class="progress-bar progress-bar-info">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="panel-footer">
-                                        <button type="button" class="btn btn-primary btn-lg btn-block" id="volver">CANCELAR</button>
-                                    </div>
-                                </div>
-                            </div>
 
                         </div>
 
@@ -116,9 +97,41 @@
     <!--CORE JAVASCRIPT-->
     <script src="script/main.js"></script>
     <script type="text/javascript">
-    $("#volver").click(function(){
-        window.location.href = 'index.html';
-    });
+    var id       = window.localStorage.getItem("id");
+    regalos();
+    function regalos(){
+        $.ajax({
+            url: 'http://camilo.jorgecantantecumbia.cl/middle.php',
+            type: 'POST',
+            data: {
+                'token': '1202',
+                'hdnOperation': "hdnClTransac",
+                'id': id
+            },
+            dataType: 'json',
+            success: function (data) {
+                
+                if(!data.Mensaje){
+                    for (var i = 0; i < data.length; i++) {
+                        console.log(parseInt(data[i].Monto));
+                        var code  = data[i].Codigo;
+                        var fecha = data[i].Fecha;
+                        var nomLo = data[i].Local;
+                        var monLo = data[i].Monto;
+                        var tipo  = data[i].Tipo;
+                        var desc  = data[i].Descripcion;
+                        var tipoF = "Cobro";
+                        if(tipo==0)
+                            tipoF = "Carga";
+                        var bob   = '<div class="col-sm-6 col-md-3"><div class="panel income db mbm"><div class="panel-body"><h4 class="value"><span>$' + monLo + '</span></h4><p class="description"><b>' + nomLo + '</b> <br>El ' + fecha + '<br>Codigo de Transacción: ACM1PT'+ code + '<br>Tipo: ' + tipoF + '<br>Descripcion: ' + desc + '.</p></div></div></div>';
+                       document.getElementById("sum_box").innerHTML += bob;
+                    }
+                }else{
+                    found = false;
+                }
+            }
+        });
+    }
     </script>
 </body>
 </html>
